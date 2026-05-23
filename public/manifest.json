@@ -1,0 +1,21 @@
+{
+  "name": "Mustard Deli",
+  "short_name": "Mustard Deli",
+  "description": "Artisan South African Mustards & Delights",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFCFB",
+  "theme_color": "#212521",
+  "icons": [
+    {
+      "src": "https://mustardeli.co.za/wp-content/uploads/2021/04/cropped-Mustard-Deli-Logo-Final-2-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "https://mustardeli.co.za/wp-content/uploads/2021/04/cropped-Mustard-Deli-Logo-Final-2-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Storefront & Navigation -->
+  <url>
+    <loc>https://app.mustardeli.co.za/</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- Main Products Route -->
+  <url>
+    <loc>https://app.mustardeli.co.za/?tab=shop</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- Recipes & Meal Planner Applet Context -->
+  <url>
+    <loc>https://app.mustardeli.co.za/?tab=recipes</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Artisanal Culinary Lab -->
+  <url>
+    <loc>https://app.mustardeli.co.za/?tab=laboratory</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

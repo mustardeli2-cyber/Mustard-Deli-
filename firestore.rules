@@ -1,0 +1,148 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // -------------------------------------------------------------------------
+    // HELPERS
+    // -------------------------------------------------------------------------
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && 
+             request.auth.token.email == "mustardeli2@gmail.com";
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    
+    function incoming() {
+      return request.resource.data;
+    }
+    
+    function existing() {
+      return resource.data;
+    }
+
+    // -------------------------------------------------------------------------
+    // GLOBAL SAFETY NET
+    // -------------------------------------------------------------------------
+    
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // -------------------------------------------------------------------------
+    // USERS COLLECTION
+    // -------------------------------------------------------------------------
+    
+    match /users/{userId} {
+      allow get: if (isOwner(userId) || isAdmin()) && isValidId(userId);
+      allow list: if isAdmin();
+      allow create, update: if (isOwner(userId) || isAdmin()) && isValidId(userId);
+      allow delete: if isAdmin();
+
+      match /galleryLikes/{imageId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // NOTIFICATIONS COLLECTION
+    // -------------------------------------------------------------------------
+    
+    match /notifications/{noteId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // SUGGESTIONS COLLECTION
+    // -------------------------------------------------------------------------
+    
+    match /suggestions/{suggestId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if (isSignedIn() && (incoming().diff(existing()).affectedKeys().hasOnly(['votes']))) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // GALLERY COLLECTION
+    // -------------------------------------------------------------------------
+
+    match /gallery/{imageId} {
+      allow read: if (resource.data.status == 'approved' && resource.data.displayInPublicAlbum == true) || 
+                   (isSignedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow create: if isSignedIn();
+      allow update: if (isSignedIn() && (isOwner(existing().userId) || incoming().diff(existing()).affectedKeys().hasOnly(['likesCount']))) || isAdmin();
+      allow delete: if (isSignedIn() && isOwner(existing().userId)) || isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // ACTIVITY COLLECTION
+    // -------------------------------------------------------------------------
+
+    match /activity/{actId} {
+      allow read: if true;
+      allow create: if true; // Activities can be logged by anyone/system for now
+      allow update, delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // TESTIMONIALS COLLECTION
+    // -------------------------------------------------------------------------
+
+    match /testimonials/{testId} {
+      allow read: if true;
+      allow create: if true; // Allow anyone to share their experience
+      allow update, delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // GIVEAWAYS COLLECTION
+    // -------------------------------------------------------------------------
+
+    match /giveaways/{giveawayId} {
+      allow read: if isSignedIn() || isAdmin();
+      allow create: if isSignedIn();
+      allow update: if (isSignedIn() && (
+        incoming().diff(existing()).affectedKeys().hasOnly(['entrants', 'entrantNames'])
+      )) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // STOCKIST VOTES COLLECTION
+    // -------------------------------------------------------------------------
+
+    match /stockistVotes/{voteId} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.auth.uid == incoming().userId;
+      allow delete: if isSignedIn() && request.auth.uid == existing().userId;
+    }
+
+    // -------------------------------------------------------------------------
+    // FOODIE DIARY COLLECTION
+    // -------------------------------------------------------------------------
+
+    match /foodieDiary/{entryId} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.auth.uid == incoming().userId;
+      allow update: if isSignedIn() && (request.auth.uid == existing().userId || isAdmin());
+      allow delete: if isSignedIn() && (request.auth.uid == existing().userId || isAdmin());
+    }
+    
+    // Fallback for others
+    match /stockists/{sId} { allow read: if true; allow write: if isAdmin(); }
+    match /batches/{bId} { allow read: if true; allow write: if isAdmin(); }
+    match /messages/{mId} { allow read, write: if isSignedIn(); }
+  }
+}

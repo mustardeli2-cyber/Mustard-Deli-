@@ -1,0 +1,259 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile & Data",
+      "description": "Consolidated user profile, preferences, and synced data",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "wholesale", "stockist"], "description": "User role from WooCommerce" },
+        "fcmToken": { "type": "string", "description": "Firebase Cloud Messaging token for push notifications" },
+        "wantsNotifications": { "type": "boolean" },
+        "geofencingEnabled": { "type": "boolean", "description": "Opt-in for proximity reminders" },
+        "consentDate": { "type": "string", "format": "date-time" },
+        "points": { "type": "number" },
+        "tier": { "type": "string", "enum": ["Seedling", "Sprout", "Harvest"] },
+        "lastHarvestDate": { "type": "string", "format": "date-time" },
+        "cart": {
+          "type": "array",
+          "description": "Array of cart items with id and quantity"
+        },
+        "wishlist": {
+          "type": "array",
+          "description": "Array of product IDs in wishlist"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this document was updated"
+        }
+      }
+    },
+    "Notification": {
+      "title": "Global Notification",
+      "description": "News and announcements",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["recipe", "product", "post", "event"] },
+        "link": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "message", "type", "createdAt"]
+    },
+    "Suggestion": {
+      "title": "Flavour Suggestion",
+      "description": "User suggested mustard flavours",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "votes": { "type": "number" }
+      },
+      "required": ["name", "description", "authorName", "createdAt"]
+    },
+    "Batch": {
+      "title": "Production Batch",
+      "description": "Details about a specific artisanal run",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "harvestDate": { "type": "string", "format": "date" },
+        "bottledDate": { "type": "string", "format": "date" },
+        "seedSource": { "type": "string" },
+        "chef": { "type": "string" },
+        "tastingNotes": { "type": "string" },
+        "tempProfile": { "type": "string" }
+      },
+      "required": ["id", "productId", "harvestDate", "bottledDate", "chef"]
+    },
+    "GalleryImage": {
+      "title": "Community Gallery Image",
+      "description": "User uploaded images of meals and moments with mustard",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "caption": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "moderationReason": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "displayInPublicAlbum": { "type": "boolean" },
+        "likesCount": { "type": "integer", "description": "Total number of likes" }
+      },
+      "required": ["userId", "imageUrl", "status", "createdAt"]
+    },
+    "Activity": {
+      "title": "Community Pulse Activity",
+      "description": "Real-time feed of community actions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["gallery_upload", "gallery_like", "suggestion_created", "vote_cast", "alchemy_transmuted", "quiz_completed", "ar_scan"] },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "message": { "type": "string" },
+        "targetId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["type", "message", "createdAt"]
+    },
+    "Message": {
+      "title": "Member Communication",
+      "description": "Targeted messaging for all, groups, or individuals",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "targetType": { "type": "string", "enum": ["all", "role", "individual"] },
+        "targetId": { "type": "string", "description": "UID for individual, or role name for role" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "isRead": { "type": "boolean" },
+        "readBy": { "type": "array", "items": { "type": "string" }, "description": "For 'all' and 'role' types, tracks seen status" }
+      },
+      "required": ["senderId", "targetType", "title", "content", "createdAt"]
+    },
+    "Stockist": {
+      "title": "Retail Partner",
+      "description": "Store location where Mustard Deli is available",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "location": { 
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "type": { "type": "string", "enum": ["deli", "butcher", "supermarket", "specialty"] },
+        "siteUrl": { "type": "string" }
+      },
+      "required": ["name", "address", "location"]
+    },
+    "Giveaway": {
+      "title": "Collaborative Giveaway",
+      "description": "Area-specific collaborative giveaways with retail partners and stockists",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "stockistName": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "cityName": { "type": "string", "description": "Specific city like Johannesburg, Cape Town, Gqeberha, etc." },
+        "suburb": { "type": "string", "description": "Local area" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "prizes": { "type": "string" },
+        "socialMediaHandle": { "type": "string" },
+        "socialPlatform": { "type": "string", "enum": ["Facebook", "X / Twitter", "Instagram", "Multiple"] },
+        "promoLink": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "ended"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "endDate": { "type": "string", "format": "date" },
+        "entrants": { "type": "array", "items": { "type": "string" } },
+        "entrantNames": { "type": "array", "items": { "type": "string" } },
+        "winnerId": { "type": "string" },
+        "winnerName": { "type": "string" },
+        "winnerDrawnAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["stockistName", "contactEmail", "cityName", "title", "prizes", "status", "createdAt"]
+    },
+    "StockistVote": {
+      "title": "Stockist Vote",
+      "description": "User like/vote for their favourite stockist representing Stockist of the Month",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "stockistId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "month": { "type": "string", "description": "Formatted as Month YYYY, e.g., May 2026" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["stockistId", "userId", "month", "createdAt"]
+    },
+    "DiaryEntry": {
+      "title": "Foodie Adventure Diary Entry",
+      "description": "Culinary journal log from adventurous customers trying bold recipes and flavor pairings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "recipeName": { "type": "string" },
+        "mustardUsed": { "type": "string" },
+        "usedWhatsForMeal": { "type": "boolean" },
+        "difficulty": { "type": "string", "enum": ["Easy", "Moderate", "Hard"] },
+        "stars": { "type": "number" },
+        "surprisedBy": { "type": "string" },
+        "experience": { "type": "string" },
+        "cookedAt": { "type": "string", "format": "date" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userName", "recipeName", "mustardUsed", "difficulty", "stars", "experience", "cookedAt", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Central user document"
+    },
+    "/foodieDiary/{entryId}": {
+      "schema": "DiaryEntry",
+      "description": "Public and personal adventurous culinary journal entries"
+    },
+    "/stockistVotes/{voteId}": {
+      "schema": "StockistVote",
+      "description": "Likes/votes for local stockists to crown Stockist of the Month"
+    },
+    "/giveaways/{giveawayId}": {
+      "schema": "Giveaway",
+      "description": "Stockist-requested collaborative giveaways"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Global news repository"
+    },
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Targeted communication center"
+    },
+    "/suggestions/{suggestionId}": {
+      "schema": "Suggestion",
+      "description": "Community flavor suggestions"
+    },
+    "/batches/{batchId}": {
+      "schema": "Batch",
+      "description": "Public provenance data"
+    },
+    "/gallery/{imageId}": {
+      "schema": "GalleryImage",
+      "description": "User generated gallery"
+    },
+    "/gallery/{imageId}/likes/{userId}": {
+      "schema": { "type": "object", "properties": { "at": { "type": "string", "format": "date-time" } } },
+      "description": "Tracks which users liked which image"
+    },
+    "/stockists/{stockistId}": {
+      "schema": "Stockist",
+      "description": "Global directory of retail partners"
+    },
+    "/activity/{activityId}": {
+      "schema": "Activity",
+      "description": "Live feed of community actions"
+    }
+  }
+}

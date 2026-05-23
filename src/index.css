@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-brand-bg: #FAF9F6;
+  --color-brand-dark: #2D2926;
+  --color-brand-accent: #E1AD01;
+  --color-brand-secondary: #F0EEE9;
+  --color-brand-muted: #E8E6E1;
+  --color-brand-border: #DCD9D0;
+
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-spin-slow: spin 8s linear infinite;
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-brand-bg text-brand-dark font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-bold tracking-tight uppercase;
+  }
+}
+
+.serif-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+}
+
+/* Custom Leaflet Styling */
+.leaflet-container {
+  background: #fcfaf7 !important;
+  font-family: inherit !important;
+}
+
+.custom-popup .leaflet-popup-content-wrapper {
+  background: #2D2926 !important;
+  color: white !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 0 !important;
+  width: auto !important;
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: #2D2926 !important;
+}
+
+.leaflet-control-zoom {
+  border: 1px solid rgba(0,0,0,0.1) !important;
+  border-radius: 0 !important;
+}
+
+.leaflet-control-zoom a {
+  background: white !important;
+  color: #2D2926 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: #F0EEE9 !important;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #DCD9D0;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #E1AD01;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

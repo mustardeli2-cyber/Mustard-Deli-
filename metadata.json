@@ -1,0 +1,6 @@
+{
+  "name": "Mustard Deli | Artisan Handcrafted Mustards",
+  "description": "Handcrafted, small-batch mustards with bold, South African flavours. High-heat, preservative-free, and awarded 'Gold' for excellence. Earn 'Seeds' for sharing and shop artisanal reserves with exclusive rewards.",
+  "requestFramePermissions": ["camera", "notifications", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
